@@ -1,199 +1,199 @@
 openapi: 3.1.1
 info:
-  title: Register user
-  version: 0.0.1
-  description: API сервиса аутентификации для регистрации новых пользователей на основе макетов экранных форм.
+  title: Register user
+  version: 0.0.1
+  description: API сервиса аутентификации для регистрации новых пользователей на основе макетов экранных форм.
 servers:
-  - url: https://localhost:1026/api/v1
-    description: Local environment
+  - url: https://localhost:1026/api/v1
+    description: Local environment
 paths:
-  /auth/register:
-    post:
-      summary: Регистрация нового пользователя
-      tags:
-        - Register
-      operationId: createNewUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RegisterForm'
-      responses:
-        '201':
-          description: Пользователь успешно создан (экран 3 успешного сценария)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RegisterSuccessResponse'
-        '400':
-          description: Ошибка валидации входных параметров или капчи (экраны 4 и 6)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                validation_error:
-                  summary: Ошибка валидации полей (Экран 4 — неверный пароль)
-                  value:
-                    code: "WEAK_PASSWORD"
-                    message: "Password must have at least one non alphanumeric character, one digit ('0-9'), one uppercase ('A-Z'), one lowercase ('a-z'), one special character and Password must be eight characters or longer."
-                    details:
-                      - field: "password"
-                        message: "Пароль должен содержать минимум 1 заглавную букву, 1 строчную, 1 цифру и 1 спецсимвол"
-                captcha_error:
-                  summary: Ошибка проверки капчи (Экран 6 — робот)
-                  value:
-                    code: "CAPTCHA_VERIFICATION_FAILED"
-                    message: "Please verify you're not a robot."
-        '409':
-          description: Пользователь с таким username уже существует (экран 5)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                username_conflict:
-                  summary: Логин уже занят в системе (Экран 5)
-                  value:
-                    code: "USER_ALREADY_EXISTS"
-                    message: "User exist"
-        '500':
-          description: Внутренняя ошибка сервера
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                server_error:
-                  summary: Сбой базы данных или сервиса
-                  value:
-                    code: "INTERNAL_SERVER_ERROR"
-                    message: "Произошла непредвиденная ошибка на сервере. Пожалуйста, повторите попытку позже."  
-                captcha_provider_down:
-                  summary: Внешний сервис капчи недоступен (истек таймаут)
-                  value:
-                    code: "CAPTCHA_SERVICE_UNAVAILABLE"
-                    message: "Сервис верификации временно недоступен. Пожалуйста, попробуйте позже."                                         
+  /auth/register:
+    post:
+      summary: Регистрация нового пользователя
+      tags:
+        - Register
+      operationId: createNewUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterForm'
+      responses:
+        '201':
+          description: Пользователь успешно создан (экран 3 успешного сценария)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterSuccessResponse'
+        '400':
+          description: Ошибка валидации входных параметров или капчи (экраны 4 и 6)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                validation_error:
+                  summary: Ошибка валидации полей (Экран 4 — неверный пароль)
+                  value:
+                    code: "WEAK_PASSWORD"
+                    message: "Password must have at least one non alphanumeric character, one digit ('0-9'), one uppercase ('A-Z'), one lowercase ('a-z'), one special character and Password must be eight characters or longer."
+                    details:
+                      - field: "password"
+                        message: "Пароль должен содержать минимум 1 заглавную букву, 1 строчную, 1 цифру и 1 спецсимвол"
+                captcha_error:
+                  summary: Ошибка проверки капчи (Экран 6 — робот)
+                  value:
+                    code: "CAPTCHA_VERIFICATION_FAILED"
+                    message: "Please verify you're not a robot."
+        '409':
+          description: Пользователь с таким username уже существует (экран 5)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                username_conflict:
+                  summary: Логин уже занят в системе (Экран 5)
+                  value:
+                    code: "USER_ALREADY_EXISTS"
+                    message: "User exist"
+        '500':
+          description: Внутренняя ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server_error:
+                  summary: Сбой базы данных или сервиса
+                  value:
+                    code: "INTERNAL_SERVER_ERROR"
+                    message: "An unexpected error occured on the server. Please try again later."  
+                captcha_provider_down:
+                  summary: Внешний сервис капчи недоступен (истек таймаут)
+                  value:
+                    code: "CAPTCHA_SERVICE_UNAVAILABLE"
+                    message: "Verification service is temporarily unavailable. Please try again later."
 components:
-  schemas:
-    RegisterForm:
-      type: object
-      required:
-        - firstName
-        - lastName
-        - username
-        - password
-        - captchaToken
-      properties:
-        firstName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: Имя пользователя. Допускаются только буквы и дефис.
-          examples:
-            - "Ivan"    
-        lastName:
-          type: string
-          minLength: 1
-          maxLength: 50
-          description: Фамилия пользователя. Допускаются только буквы и дефис.
-          examples:
-            - "Ivanov"   
-        username:
-          type: string
-          minLength: 3
-          maxLength: 30
-          pattern: '^[a-zA-Z0-9_]+$'
-          description: Уникальный логин. Разрешены латинские буквы, цифры и символ подчеркивания.
-          examples:
-            - "ivan_ivanov"
-        password:
-          type: string
-          minLength: 8
-          maxLength: 128
-          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$'
-          description: Пароль. Должен содержать минимум 1 заглавную, 1 строчную букву, 1 цифру и 1 спецсимвол. 
-          examples:
-            - "P@ssword1"      
-        captchaToken:
-          type: string
-          description: Токен верификации, полученный от виджета капчи ("I'm not a robot").
-          examples:
-            - "04AGdBN24_some_token_value"
+  schemas:
+    RegisterForm:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - username
+        - password
+        - captchaToken
+      properties:
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Имя пользователя. Допускаются только буквы и дефис.
+          examples:
+            - "Ivan" 
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Фамилия пользователя. Допускаются только буквы и дефис.
+          examples:
+            - "Ivanov"  
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: '^[a-zA-Z0-9_]+$'
+          description: Уникальный логин. Разрешены латинские буквы, цифры и символ подчеркивания.
+          examples:
+            - "ivan_ivanov"
+        password:
+          type: string
+          minLength: 8
+          maxLength: 128
+          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$'
+          description: Пароль. Должен содержать минимум 1 заглавную, 1 строчную букву, 1 цифру и 1 спецсимвол. 
+          examples:
+            - "P@ssword1"
+        captchaToken:
+          type: string
+          description: Токен верификации, полученный от виджета капчи ("I'm not a robot").
+          examples:
+            - "04AGdBN24_some_token_value"
 
-    RegisterSuccessResponse:
-      type: object
-      required:
-        - id
-        - username 
-        - firstName
-        - lastName
-        - createdAt
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Системный UUID созданного пользователя.
-          examples:
-            - "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
-        username:
-          type: string
-          description: Логин созданного пользователя.
-          examples:
-            - "ivan_ivanov"
-        firstName:
-          type: string
-          description: Имя пользователя.
-          examples:
-            - "Ivan"
-        lastName:
-          type: string
-          description: Фамилия пользователя.
-          examples:
-            - "Ivanov"
-        createdAt:
-          type: string
-          format: date-time
-          description: Дата и время регистрации в формате ISO 8601.
-          examples:
-            - "2026-06-14T12:00:00Z"
+    RegisterSuccessResponse:
+      type: object
+      required:
+        - id
+        - username
+        - firstName
+        - lastName
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Системный UUID созданного пользователя.
+          examples:
+            - "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+        username:
+          type: string
+          description: Логин созданного пользователя.
+          examples:
+            - "ivan_ivanov"
+        firstName:
+          type: string
+          description: Имя пользователя.
+          examples:
+            - "Ivan"
+        lastName:
+          type: string
+          description: Фамилия пользователя.
+          examples:
+            - "Ivanov"
+        createdAt:
+          type: string
+          format: date-time
+          description: Дата и время регистрации в формате ISO 8601.
+          examples:
+            - "2026-06-14T12:00:00Z"
 
-    ErrorResponse:
-      type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: string
-          description: Код бизнес-ошибки для обработки логики на фронте.
-          examples:
-            - "VALIDATION_ERROR"
-        message:
-          type: string
-          description: Текст ошибки, отображаемый пользователю под формой.
-          examples:
-            - "Произошла ошибка при обработке запроса"
-        details:
-          type: array
-          description: Детализация ошибок по конкретным полям (передается при наличии).
-          items: 
-            $ref: '#/components/schemas/ValidationErrorDetail'    
-
-    ValidationErrorDetail:
-      type: object
-      required:
-        - field
-        - message
-      properties:
-        field:
-          type: string
-          description: Название поля, не прошедшего валидацию.
-          examples: 
-            - "username"
-        message:
-          type: string
-          description: Описание ошибки для конкретного поля.
-          examples: 
-            - "Пароль должен содержать минимум 1 заглавную, 1 строчную букву, цифру и спецсимвол"
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Код бизнес-ошибки для обработки логики на фронте.
+          examples:
+            - "VALIDATION_ERROR"
+        message:
+          type: string
+          description: Текст ошибки, отображаемый пользователю под формой.
+          examples:
+            - "An error occured while processing the request"
+        details:
+          type: array
+          description: Детализация ошибок по конкретным полям (передается при наличии).
+          items:
+            $ref: '#/components/schemas/ValidationErrorDetail' 
+                
+    ValidationErrorDetail:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+          description: Название поля, не прошедшего валидацию.
+          examples: 
+            - "username"
+        message:
+          type: string
+          description: Описание ошибки для конкретного поля.
+          examples:
+            - "Password must have at least one non alphanumeric character, one digit ('0-9'), one uppercase ('A-Z'), one lowercase ('a-z'), one special character and Password must be eight characters or longer."
