@@ -38,9 +38,6 @@ paths:
                   value:
                     code: "WEAK_PASSWORD"
                     message: "Password must have at least one non alphanumeric character, one digit ('0-9'), one uppercase ('A-Z'), one lowercase ('a-z'), one special character and Password must be eight characters or longer."
-                    details:
-                      - field: "password"
-                        message: "Пароль должен содержать минимум 1 заглавную букву, 1 строчную, 1 цифру и 1 спецсимвол"
                 captcha_error:
                   summary: Ошибка проверки капчи (Экран 6 — робот)
                   value:
