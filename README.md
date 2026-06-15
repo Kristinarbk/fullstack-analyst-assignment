@@ -29,6 +29,6 @@
 ## 🔐 Задача 3. Интерфейс регистрации пользователя (REST API)
 * **Спецификация контракта:** Разработан строгий контракт на стороне бэкенд-сервиса в формате OpenAPI 3.1.1, включающий валидацию полей, интеграцию с капчей и обработку клиентских/серверных ошибок.
   * 📄 [Посмотреть YAML-файл контракта](./task3/api.registerUser.yaml)
-  * 🌐 **[ОТКРЫТЬ КОНТРАКТ В ИНТЕРАКТИВНОМ SWAGGER EDITOR](https://editor.swagger.io/?url=(https://raw.githubusercontent.com/Kristinarbk/fullstack-analyst-assignment/refs/heads/main/task3/api.registerUser.yaml)**
+  * 🌐 **[ОТКРЫТЬ КОНТРАКТ В ИНТЕРАКТИВНОМ SWAGGER EDITOR](https://editor.swagger.io/?url=https://raw.githubusercontent.com/Kristinarbk/fullstack-analyst-assignment/refs/heads/main/task3/api.registerUser.yaml)**
 * **Алгоритм обработки запроса на бэкенде (UML Activity Diagram):**
   ![UML Activity Diagram](./task3/activity.png)
